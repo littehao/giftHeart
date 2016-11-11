@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+	<div class="image"> </div>
+	<script src="jquery.js" > </script>
+	<script>
+		var images = [];
+		var id = 0;
+		var confirm = true;
+		var num = 20;
+		var max = 2;
+		var loopNum = 0;
+		var speed = 30;
+		var timer;
+		$(function(){
+			timer = setInterval(loop , speed);
+			// setTimeout(function(){clearInterval(timer)}, speed*num*max);
+		});
+		function loop() {
+			if( images.length <= num && confirm ){
+				var image = new Image(50 , 100, ++id);
+				images.push(image);
+			}
+			if(images.length > num && confirm){
+				confirm = false;
+			}
+
+			if(!confirm && images.length == 0){
+				clearInterval(timer);
+			}
+
+			for (var i = 0; i < images.length; i++) {
+				var image = images[i];
+				if( image.opacity < 0 ){
+					$("#"+image.id).remove();
+					// console.log(images[i].id);
+					images.shift();
+				}
+				image.frameskip();
+				image.update();
+			};
+			
+			
+		}
+		function Image (xPos, yPos, i) { 
+		    this.xPos = xPos;//中心X坐标
+		    this.yPos = yPos; //中心Y坐标
+		    this.id = i;
+		    this.height = Math.random();//Math.random()：得到一个0到1之间的随机数
+			this.height = Math.ceil(this.height * 10 +20); //四舍五入
+		    this.imgAddress = new Array(
+		    	"heart9@2x.png",
+		    	"heart@2x.png",
+		    	"heart0@2x.png",
+		    	"heart1.png",
+		    	"heart2.png",
+		    	"heart3.png",
+		    	"heart1@2x.png",
+		    	"heart2@2x.png",
+		    	"heart3@2x.png",
+		    	"heart4@2x.png",
+		    	"heart5@2x.png",
+		    	"heart6@2x.png",
+		    	"heart7@2x.png",
+		    	"heart8@2x.png",
+		    	"heart10@2x.png",
+		    	"heart11@2x.png"
+		    	);
+		    this.img = Math.random();//Math.random()：得到一个0到1之间的随机数
+			this.img = Math.ceil(this.img * this.imgAddress.length-1); //四舍五入
+			$("<img />",{
+				src:this.imgAddress[this.img], 
+				id:i,
+				style:'position:absolute;height:'+this.height+'px; top: '+this.yPos+'px, left: '+this.xPos+'px; opacity:1;'
+				}).appendTo($(".image"));
+		    
+			if(Math.round(Math.random()) == 0){
+				this.yVel = Math.random()*4;
+			}else{
+				this.yVel = -Math.random()*4;
+			}
+			this.xVel = 0;
+			this.gravity = 0.5;//重力影响
+			this.opacity = 1;	//透明度
+		    this.opacityChange = 0.1; //透明度变化量
+
+			this.frameskip = function(){ //实现更改
+				$("#"+this.id).css({
+					top:this.xPos,
+					left:this.yPos,
+					opacity:this.opacity
+				});
+
+			}
+			this.update = function(){ //更新自己的方法
+				if(Math.round(Math.random()) == 0){
+					this.yVel += this.gravity;
+				}else{
+					this.yVel -= this.gravity;
+				}
+				if(this.xPos > 400){
+					this.opacity -= this.opacityChange;
+				}
+				this.xVel += this.gravity;			  	
+			    this.yPos += this.yVel;
+			    this.xPos += this.xVel;
+			}
+	  	}
+	</script>
+</body>
+</html>
